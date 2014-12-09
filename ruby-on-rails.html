@@ -1,0 +1,19 @@
+---
+layout: default
+title: Ruby On Rails
+permalink: /ruby-on-rails/
+---
+<div class="home">
+
+    {% for post in site.tags["ruby-on-rails"] %}
+  <h2>
+    <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+    </h2>
+    <p> {{ post.content }} </p>
+
+    <hr>
+
+    {% endfor %}
+
+</div>
+
