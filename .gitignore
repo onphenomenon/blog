@@ -1,2 +1,7 @@
 _site
 .sass-cache
+Gemfile
+Gemfile.lock
+_config.yml
+_plugins/
+googleda643d97b27a1aa6.html

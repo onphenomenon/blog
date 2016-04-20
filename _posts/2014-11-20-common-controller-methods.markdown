@@ -2,7 +2,7 @@
 layout: post
 title:  "Common Controller Methods"
 date:   2014-11-20 18:05:42
-tags: ruby-on-rails
+tags: ["ruby-on-rails", "front"]
 ---
 I'm DRY 'ing' up my Reddit clone code as I go along, and since the first time around, any new pattern or practice can prove challenging, I'm documenting simple practices you can throw into your frequently used Rails tool box.
 

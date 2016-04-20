@@ -1,0 +1,53 @@
+---
+layout: post
+title:  "Hop-Step Recursive Problem"
+date:   2015-5-18 18:05:42
+tags: ["front", interview"]
+---
+
+Question: There is a set of stairs with n steps. To reach the top, you can take one step at a time, hop two steps, or hop three steps and combine these types. How many different combination of step type are there to reach the top?
+
+I will model two different implementations:
+
+The first attepts to count up to the total number of steps. In order to do this an be recursive, an accumulator argument must be passed into the new lexical scope on every call along with the number of steps left. Also in this less elegant solution, the results pathway count is stored in a result variable which every every scope holds, but must be chained to the recursive call. Then the result variable must be the final return statement for each call, and become the final output for the recursive stack.
+
+{% highlight js%}
+
+function checkPaths(accumulator, steps) {
+
+  if(accumulator === steps) {
+    return 1;
+  }
+  var result = 0;
+  //recursive calls for each hop pattern choice.
+  for(var i=1; i<4; i++){
+       if(accumulator+i <= steps) result += checkPaths(accumulator+i, steps);
+  }
+  return result;
+
+}
+
+checkPaths(0, 3)  //4
+
+{% endhighlight %}
+
+This solution is tricky to implement because it can become plagued by issues of passing a variable by reference or by value. Confusion is easily introduced with the variable `var result = 0` in each scope which is then returned by each successive call, so must be chained to the last return statement in the stack.
+
+The most elegant approach tackles the problem by focusing on the simplest decision from the end of the staircase. One step from the top, one has a limited number of choices: a one step hop, which results in a complete pathway. Two steps from the top, one has a limited number of choices: two one step hops, or one two step hop, both of which result in a complete pathway. Thus we could have a function which returns 1, a complete pathway, when number of steps left equals zero, with three step types offered on each pass of the function. If number of steps is less than 0, we can return a zero, because this pathway overshot and did not land on the last step.
+
+
+{% highlight js%}
+
+function countWays(stepsleft) {
+    if(stepsleft === 0){
+        return 1;
+    }else if(stepsleft < 0) {
+        return 0
+    }else {
+        return countWays(stepsleft-1)+countWays(stepsleft-2)+countWays(stepsleft-3);
+    }
+}
+
+countWays(3) //4
+
+{% endhighlight %}

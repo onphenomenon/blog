@@ -1,11 +1,16 @@
 # Site settings
-title: Kari's Blog
+title: Karianne's Blog
 email: kariannechristina@gmail.com
-description: 
+description:
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "http://127.0.0.1:4000" # the base hostname & protocol for your site
 twitter_username: onphenonmenon
 github_username:  onphenomenon
+highlighter: pygments
 
 # Build settings
 markdown: kramdown
+#gems
+gems:
+  - jekyll-sitemap
+

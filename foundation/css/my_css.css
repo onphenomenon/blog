@@ -1,3 +1,10 @@
 .wrapper {
-	margin: 8%;
+	margin: 0 auto;
+
+  margin-top: 35px;
+  background-color: transparent;
+  width: 960px;
+}
+.box {
+  background-color: #f5f6f7;
 }

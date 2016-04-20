@@ -1,0 +1,226 @@
+---
+layout: post
+title:  "Grouped Bars HTML"
+date:   2015-07-22 18:05:42
+tags: ["ruby-on-rails"]
+---
+
+<html>
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+  <body>
+  <div id="example"></div>
+  </body>
+<script type="text/javascript">
+
+  var dates = [
+  { 'Total Income': '10000.00',
+    'Total Cost of Sales': '-5500.00',
+    'Total Expenses': '-1700.00',
+    'Net Earnings': '2800.00' },
+    { 'Total Income': '19000.00',
+    'Total Cost of Sales': '-5000.00',
+    'Total Expenses': '-3600.00',
+    'Net Earnings': '10400' },
+    { 'Total Income': '5500.00',
+    'Total Cost of Sales': '-1000.00',
+    'Total Expenses': '2000.00',
+    'Net Earnings': '2500.00' },
+    { 'Total Income': '10000.00',
+    'Total Cost of Sales': '-5500.00',
+    'Total Expenses': '-1700.00',
+    'Net Earnings': '2800.00' },
+    { 'Total Income': '19000.00',
+    'Total Cost of Sales': '-5000.00',
+    'Total Expenses': '-3600.00',
+    'Net Earnings': '10400' },
+    { 'Total Income': '5500.00',
+    'Total Cost of Sales': '-1000.00',
+    'Total Expenses': '2000.00',
+    'Net Earnings': '2500.00' },
+    { 'Total Income': '10000.00',
+    'Total Cost of Sales': '-5500.00',
+    'Total Expenses': '-1700.00',
+    'Net Earnings': '2800.00' },
+    { 'Total Income': '19000.00',
+    'Total Cost of Sales': '-5000.00',
+    'Total Expenses': '-3600.00',
+    'Net Earnings': '10400' },
+    { 'Total Income': '5500.00',
+    'Total Cost of Sales': '-1000.00',
+    'Total Expenses': '2000.00',
+    'Net Earnings': '2500.00' },
+    { 'Total Income': '19000.00',
+    'Total Cost of Sales': '-5000.00',
+    'Total Expenses': '-3600.00',
+    'Net Earnings': '10400' },
+    { 'Total Income': '5500.00',
+    'Total Cost of Sales': '-1000.00',
+    'Total Expenses': '2000.00',
+    'Net Earnings': '2500.00' }
+  ]
+
+
+var layers = function (dates) {
+  console.log("dates length ", dates.length);
+  //layer 1 is total cost of sales and total expenses
+  layerone = [];
+  layertwo = [];
+  layerthree = [];
+  for(var i = 0; i < dates.length; i++){
+    //negatives is layer 1)
+    //console.log("cost of sales ", dates[i]["Total Cost of Sales"])
+    layerone.push(parseInt(dates[i]["Total Cost of Sales"]));
+    layertwo.push(parseInt(dates[i]["Total Expenses"]));
+    layerthree.push(parseInt(dates[i]["Total Income"]));
+  }
+  var threelayers = [];
+  layerone = layerone.map(function(d, i) { return {x: i, y: d }; });
+  layertwo = layertwo.map(function(d, i) { return {x: i, y: d }; });
+  layerthree = layerthree.map(function(d, i) { return {x: i, y: d }; });
+
+  threelayers.push(layerone, layertwo, layerthree);
+
+  console.log(threelayers);
+  var stack = d3.layout.stack();
+  var layers = stack(threelayers);
+  return layers;
+};
+var layers = layers(dates);
+console.log("layers ", layers);
+
+function columnChart(layers) {
+  //returns a stack with two layers, or more in the future.
+  var n = 3, // number of layers
+      m = 11;
+  var border = 1;
+  var borderColor = 'black';
+  //set svg measurements
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"];
+  var margin = {top: 40, right: 10, bottom: 20, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+  var extents = [];
+  extents = extents.concat(d3.extent(layers[0].map(function(d) {return d.y; })));
+  extents = extents.concat(d3.extent(layers[1].map(function(d) {return d.y; })));
+  extents = extents.concat(d3.extent(layers[2].map(function(d) {return d.y; })));
+  //console.log(extents);
+  //console.log(d3.extent(layers, function(layer) { return d3.extent(layer, function(d) {return d.y;  }) }));
+  var yGroupExtents = d3.extent(extents);
+  console.log("yGroupExtents ", yGroupExtents);
+
+  //setting the x and y scales and axises
+  var yScale = d3.scale.linear()
+    .domain(yGroupExtents)
+    .range([height, 0]);
+  //for data less than zero.
+  var y0 = function() {
+    console.log("Y scale value ", yScale(0))
+    return yScale(0)
+  }
+  var yAxis = d3.svg.axis().scale(yScale).tickSize(1)
+    .tickPadding(0).orient("left");
+
+  var xScale = d3.scale.ordinal().domain(d3.range(m)).rangeRoundBands([0, width], .08);
+  var xordinal = d3.scale.ordinal().domain(months).rangeRoundBands([0, width], .08);
+  var xAxis = d3.svg.axis()
+    .scale(xordinal)
+    .tickSize(1)
+    .tickPadding(3)
+    .orient("bottom");
+  var zeroAxis = d3.svg.axis()
+    .scale(xordinal)
+    .tickValues(null)
+    .tickSize(1)
+    .tickPadding(3)
+    .orient("bottom");
+
+  var color = d3.scale.linear()
+    .domain([0, n - 1])
+    .range(['#FF69B4', "#008000"]);
+  ////////////////////////////////////
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // var borderPath = svg.append("rect")
+  //           .attr("x", 0)
+  //           .attr("y", 0)
+  //           .attr("height", height)
+  //           .attr("width", width-margin.left)
+  //           .style("stroke", borderColor)
+  //           .style("fill", "none")
+  //           .style("stroke-width", border);
+//xAxis
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+//zero line
+svg.append("line")
+    // .attr("class", "x zero axis")
+    .attr('x1', 0)
+    .attr('x2', 960-margin.right)
+    .attr('y1', y0())
+    .attr('y2', y0())
+    .attr("stroke", "black")
+    .attr("stroke-width", 1)
+    // .attr("transform", "translate(0," + y0() + ")")
+    // .call(zeroAxis);
+//yAxis
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+var layer = svg.selectAll(".layer")
+    //there are two layers so there will be two elements upon enter
+    .data(layers)
+    .enter().append("g")
+    .attr("class", "layer")
+    .style("fill", function(d, i) { return color(i); });
+
+var rect = layer.selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+    .attr("x", function(d, i, j) { return xScale(d.x) + xScale.rangeBand() / n * j; })
+    .attr("y", function(d) { return d.y < 0 ? y0() : yScale(d.y); })
+    .attr("width", xScale.rangeBand() / n)
+    .attr("height", function(d) { return Math.abs( yScale(d.y) - y0() ); });
+
+
+
+
+}
+columnChart(layers)
+
+
+</script>
+
+</script>
+</html>
+
+

@@ -2,8 +2,7 @@
 layout: post
 title:  "Easy Twitter Clone"
 date:   2014-12-2 18:05:42
-tags: interview, ruby-on-rails
-categories: jekyll update
+tags: ["interview", "ruby-on-rails", "front"]
 ---
 Ok so here's the scenario: You come in for an interview for a Ruby on Rails junior dev position. The interviewer wants to
 see the ease with which you can understand a feature and implement it quickly in Rails. However, she or he, doesn't have the time to explain an existing app, with it's specific gemset, features, and tests. Therefore, if you are asked to build an app, it's likely to be a simple one, and the challenge here is twofold, to comeplete the critera and create a working app
@@ -31,10 +30,15 @@ Ok Twitter Clone, go!
 
 
 `rails new twitter+`
+
 `cd twitter+`
+
 `rails g scaffold tweet body:text`
+
 `rake db:migrate`
+
 `rails s`
+
 (Here I already encountered a ruby -v, gemset issue that took me 3+ min to sort through)
 
 Great with Rails scaffold we already have page that has a title and a link for a new tweet.
@@ -43,9 +47,13 @@ Then we have to click back to see all the tweets.
 Let's get it all down to one page.
 
 Don't forget to create a git repo, to demonstrate best practices.
+
 `git init`
+
 `git add .`
+
 `git commit -m "Initial Commmit`
+
 
 First lets add the create new tweet form to the tweets_index page.
 

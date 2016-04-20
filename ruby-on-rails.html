@@ -4,16 +4,19 @@ title: Ruby On Rails
 permalink: /ruby-on-rails/
 ---
 <div class="home">
-
+ <ul class="post-list">
     {% for post in site.tags["ruby-on-rails"] %}
-  <h2>
-    <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-    </h2>
-    <p> {{ post.content }} </p>
+    <li>
+      <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-    <hr>
-
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </h2>
+        <p> {{ post.excerpt }} </p>
+      </li>
     {% endfor %}
-
+  </ul>
 </div>
+
+
 

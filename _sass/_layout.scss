@@ -162,7 +162,13 @@
  * Page content
  */
 .page-content {
-    padding: $spacing-unit 0;
+
+    padding: 35px;
+    padding-bottom: 15px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 960px;
+
 }
 
 .page-heading {

@@ -2,31 +2,43 @@
 layout: post
 title:  "Search with a Simple Server"
 date:   2014-11-13 18:05:42
-tags: interview
-categories: jekyll update
+tags: ["interview", "front"]
 ---
 Here's a challenge that can be done in 20 min:
 
-####Create a search suggest bar with a simple server. This search suggest should read the input prefix with jQuery, make an AJAX call, and return 10 words that begin with that prefix as the user types. 
+####Create a search suggest bar with a simple server. This search suggest should read the input prefix with jQuery, make an AJAX call, and return 10 words that begin with that prefix as the user types.
 
 OK, go!
 
 I'm going to do this using Sinatra as a server for a simple internal call to dictionary file.
 
 
-Create a directory for our html pages and server files. 
+Create a directory for our html pages and server files.
+
 `mkdir name`
+
 `cd name`
+
 Create a file for our server code:
+
 `touch sinatra.rb`
+
 Create a views directory:
+
 `mkdir views`
+
 `cd views`
+
 Add an erb file in views for our html:
+
 `touch search.erb`
+
 `cd ..`
+
 We need a gemfile in the root folder:
+
 `bundle init`
+
 (if you don't have bundler yet: http://bundler.io/rationale.html)
 
 In the gemfile that was created put this gem and source:
@@ -59,11 +71,11 @@ Start the server in the terminal with:
 In the code that starts the server, check for the port number it is using-- ex: 3000, 4000, 4567
 then in the browser go to http://localhost:port#/hi. If the server is working you should see “Hello World!” in the browser.
 
-Great! Let's implement the search bar and the dictionary. 
+Great! Let's implement the search bar and the dictionary.
 
 Grab a dictionary from a file online:Here's one that works: [Dictionary][file]. Save it in the main directory, with a name such as words.txt, dictionary.txt...
 
-Open your erb file in the views directory and let's write the html structure. We need an input tag, a button, and a div with an id where the AJAX call can spit back the search results. 
+Open your erb file in the views directory and let's write the html structure. We need an input tag, a button, and a div with an id where the AJAX call can spit back the search results.
 
 {% highlight html %}
 <!DOCTYPE html>
@@ -98,7 +110,7 @@ We start with a jQuery function that waits for the "key up" stroke from the user
 Let's ask the server to render our html page, then write the "get" request for the dictionary.
 
 Open the ruby server file, (we saved it as sinatra.rb)
-Write a get request definition with the name of the erb file to open (we called ours search.erb)  
+Write a get request definition with the name of the erb file to open (we called ours search.erb)
 
 {% highlight ruby %}
 get '/search' do
@@ -106,11 +118,11 @@ get '/search' do
 end
 {% endhighlight %}
 
-Now make sure the server is running (`ruby sinatra.rb`) and go to: http://localhost:4567/search 
+Now make sure the server is running (`ruby sinatra.rb`) and go to: http://localhost:4567/search
 
 You should see your search bar with the button! Type something in the bar; it doesn't work yet :(
 
-Ok, let's write the /suggest/ AJAX, get request that we put in our script. I'm going to put it here with #comments for explanation. 
+Ok, let's write the /suggest/ AJAX, get request that we put in our script. I'm going to put it here with #comments for explanation.
 
 {% highlight ruby %}
 WORDS = File.readlines('dictionary.txt').freeze
@@ -129,35 +141,35 @@ get '/suggest' do
 # let's use this to check how long it takes to find 10 words.
 # iterate through the dictionary:
   WORDS.each do |w|
-  	break if results.length == 10 
+  	break if results.length == 10
   	if !(w =~ re).nil?
   	  results << w
   	end
   end
-  
+
   results.map { |r| "<div>#{ r }</div>"}.join('') + "<div>#{ Time.now - s }</div>"
-  #map the results as a formatted array, and the difference in time as output. 
+  #map the results as a formatted array, and the difference in time as output.
 End
 {% endhighlight %}
 
-Ok, now if your request address in your script is correct: 
+Ok, now if your request address in your script is correct:
 'http://localhost:4567/suggest?q=' + q
 for the saved variable user input and the get request name, and the port, etc. your search bar should work!
 
 With the server running, go to:
 'http://localhost:4567/search
 
-As you type words into the search bar, you should see a list of words and a number with the time it took the server to run the search. 
+As you type words into the search bar, you should see a list of words and a number with the time it took the server to run the search.
 
 Experiment with ways that your /suggest/ request could be faster or slower.
 
-Here are two ways I saved you from implementing a slow search: 
+Here are two ways I saved you from implementing a slow search:
 
-* I took the opening of the dictionary file out of the /suggest/ call, saving the time of having to load it out of the request time. Now it loads immediately as the server starts. 
+* I took the opening of the dictionary file out of the /suggest/ call, saving the time of having to load it out of the request time. Now it loads immediately as the server starts.
 
 * I saved the regular expression as a variable outside the .each iteration. This way the time it takes to build the regular expression is not compounded in memory by every iteration.
 
-These two modifications significantly improved run time to < 1 sec. There are further optimizations but the tests to gauge improvement would need to be more comprehensive, as the searches can vary widely in run time based on the particular combination of letters. Also as more advanced search algorithms are considered, such as organizing the dictionary as a trie, the purpose and functionality of the search bar comes into question: does the search bar actually need to be faster? Does complexity outweigh simple, less error prone design? 
+These two modifications significantly improved run time to < 1 sec. There are further optimizations but the tests to gauge improvement would need to be more comprehensive, as the searches can vary widely in run time based on the particular combination of letters. Also as more advanced search algorithms are considered, such as organizing the dictionary as a trie, the purpose and functionality of the search bar comes into question: does the search bar actually need to be faster? Does complexity outweigh simple, less error prone design?
 
 I hope you had fun! I did!
 
